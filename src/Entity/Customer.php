@@ -22,7 +22,7 @@ class Customer
     #[Groups('customer:data')]
     private ?string $email = null;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 255, nullable: true)]
     #[Groups('customer:data')]
     private ?string $registeredTradeName = null;
 
@@ -33,6 +33,10 @@ class Customer
     #[ORM\Column(nullable: true)]
     #[Groups('customer:data')]
     private ?array $address = null;
+
+    #[ORM\OneToOne(mappedBy: 'customer', cascade: ['persist', 'remove'])]
+    #[Groups('customer:data')]
+    private ?CustomerReview $customerReview = null;
 
     public function getId(): ?int
     {
@@ -68,7 +72,7 @@ class Customer
         return $this->registeredTradeName;
     }
 
-    public function setRegisteredTradeName(string $registeredTradeName): static
+    public function setRegisteredTradeName(?string $registeredTradeName): static
     {
         $this->registeredTradeName = $registeredTradeName;
 
@@ -95,6 +99,28 @@ class Customer
     public function setAddress(?array $Address): static
     {
         $this->address = $Address;
+
+        return $this;
+    }
+
+    public function getCustomerReview(): ?CustomerReview
+    {
+        return $this->customerReview;
+    }
+
+    public function setCustomerReview(?CustomerReview $customerReview): static
+    {
+        // unset the owning side of the relation if necessary
+        if ($customerReview === null && $this->customerReview !== null) {
+            $this->customerReview->setCustomer(null);
+        }
+
+        // set the owning side of the relation if necessary
+        if ($customerReview !== null && $customerReview->getCustomer() !== $this) {
+            $customerReview->setCustomer($this);
+        }
+
+        $this->customerReview = $customerReview;
 
         return $this;
     }
