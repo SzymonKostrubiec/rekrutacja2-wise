@@ -4,10 +4,12 @@ namespace App\Controller;
 
 use App\Action\StoreCustomerAction;
 use App\Dto\StoreUserDto;
+use App\Repository\CustomerRepository;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpKernel\Attribute\MapRequestPayload;
 use OpenApi\Attributes as OA;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Serializer\SerializerInterface;
 
 class CustomerController
 {
@@ -18,7 +20,7 @@ class CustomerController
     }
 
     #[OA\Post(
-        path: '/api/customer/new',
+        path: '/api/customer',
         summary: 'Register new customer',
         description: 'Register new customer',
         requestBody: new OA\RequestBody(
@@ -78,7 +80,7 @@ class CustomerController
             )
         ]
     )]
-    #[Route('/api/customer/new', name: 'register_customer', methods: ['POST'])]
+    #[Route('/api/customer', name: 'register_customer', methods: ['POST'])]
     public function store(#[MapRequestPayload] StoreUserDto $storeUserDto):JsonResponse
     {
         try{
@@ -96,6 +98,18 @@ class CustomerController
                     'message' => $exception->getMessage()
                 ], 400);
         }
+    }
 
+    #[OA\Get(
+        path: '/api/customer',
+        summary: 'Get all customers',
+        description: 'Get all customers from database',
+    )]
+    #[Route('/api/customer', name: 'getAllCustomers', methods: ['GET'])]
+    public function get(CustomerRepository $customerRepository,  SerializerInterface $serializer): JsonResponse
+    {
+        $customers = $customerRepository->findAll();
+        $data = $serializer->normalize($customers, null, ['groups' => 'customer:data']);
+        return new JsonResponse(['success' => true, 'data' => $data]);
     }
 }

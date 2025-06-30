@@ -3,7 +3,7 @@
 namespace App\Dto;
 use Symfony\Component\Validator\Constraints as Assert;
 
-final class StoreUserDto
+final readonly class StoreUserDto
 {
     public function __construct(
         public int $taxNumber,

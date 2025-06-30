@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use App\Repository\CustomerRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Attribute\Groups;
 
 #[ORM\Entity(repositoryClass: CustomerRepository::class)]
 class Customer
@@ -14,18 +15,23 @@ class Customer
     private ?int $id = null;
 
     #[ORM\Column(nullable: true)]
+    #[Groups('customer:data')]
     private ?int $taxNumber = null;
 
     #[ORM\Column(length: 255, unique: true)]
+    #[Groups('customer:data')]
     private ?string $email = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups('customer:data')]
     private ?string $registeredTradeName = null;
 
     #[ORM\Column(length: 255, nullable: true)]
+    #[Groups('customer:data')]
     private ?string $phone = null;
 
     #[ORM\Column(nullable: true)]
+    #[Groups('customer:data')]
     private ?array $address = null;
 
     public function getId(): ?int
