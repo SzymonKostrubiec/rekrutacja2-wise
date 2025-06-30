@@ -74,6 +74,7 @@
     },
     "require-dev": {
         "phpstan/phpstan": "^2.1",
+        "symfony/maker-bundle": "^1.63",
         "symplify/coding-standard": "^12.4"
     }
 }
